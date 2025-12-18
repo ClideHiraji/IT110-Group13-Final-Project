@@ -1,0 +1,8 @@
+{
+  "featured": {
+    "title": "Venus Figurine (Placeholder)",
+    "date": "c. 25,000 BCE",
+    "image": "/images/artifact_placeholder.jpg",
+    "description": "A placeholder artifact until the Met Museum API is fetched."
+  }
+}

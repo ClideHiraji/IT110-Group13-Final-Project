@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* small cinematic body baseline */
+body {
+  background: #000;
+  color: #F8F7F3;
+  font-family: 'Inter', sans-serif;
+}
