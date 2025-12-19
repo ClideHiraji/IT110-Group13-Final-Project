@@ -107,7 +107,7 @@
                                     <td align="center">
                                         <p style="margin: 0 0 10px 0; font-size: 14px; color: #6b7280;">
                                             Best regards,<br>
-                                            <strong style="color: #fbbf24;">{{ config('app.name') }}</strong>
+                                            <strong style="color: #fbbf24;">ArtVault</strong>
                                         </p>
                                         <div style="margin-top: 20px;">
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(251, 191, 36, 0.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;">

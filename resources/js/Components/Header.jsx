@@ -1,57 +1,121 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
+import ApplicationLogo from "./ApplicationLogo";
+import { Palette } from "lucide-react";
 
-export default function Header({auth}) {
+/**
+ * Header Component
+ * 
+ * Main navigation header with authentication-based menu items.
+ * Displays different navigation options based on user auth state.
+ * 
+ * Features:
+ * - Responsive navigation
+ * - Conditional rendering based on auth state
+ * - Inertia.js navigation
+ * - Sticky positioning
+ * - Logo/branding area
+ * 
+ * @param {Object} props - Component props
+ * @param {Object} props.auth - Authentication object
+ * @param {Object|null} props.auth.user - Current user object or null
+ * 
+ * Navigation Items:
+ * - Authenticated: Dashboard, Timeline, Collection, Profile, Logout
+ * - Guest: Home, Login, Register
+ * 
+ * @example
+ * // In layout
+ * <Header auth={auth} />
+ * 
+ * @example
+ * // Usage in page
+ * import Header from '@/Components/Header';
+ * 
+ * export default function MyPage({ auth }) {
+ *   return (
+ *     <>
+ *       <Header auth={auth} />
+ *       <main>...</main>
+ *     </>
+ *   );
+ * }
+ */
+export default function Header({ auth }) {
   return (
-    <header className="w-full fixed top-0 z-50 border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-300 to-orange-300 rounded-lg flex items-center justify-center font-bold text-black">
-            C
+    <header className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-black via-black to-black/95 backdrop-blur-xl border-b border-amber-500/20">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="relative">
+            <div className="absolute -inset-2 rounded-full bg-amber-500/10 blur-md" />
+            <Palette className="w-8 h-8 text-amber-400 group-hover:text-orange-400 transition-colors" />
           </div>
-          <h1 className="text-white font-semibold text-lg">Chronicles</h1>
-        </div>
+          <span className="text-2xl font-display text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-orange-400">
+            ArtVault
+          </span>
+        </Link>
 
-        <div className="flex items-center gap-4">
-          {!auth?.user ? (
+        <div className="flex items-center gap-6">
+          {auth.user ? (
             <>
               <Link
-                href="/login"
-                className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-md text-white hover:bg-white/20 transition-colors"
+                href="/dashboard"
+                className="text-[#F8F7F3]/80 hover:text-amber-300 transition-colors"
               >
-                Login
+                Dashboard
               </Link>
-
               <Link
-                href="/register"
-                className="px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/30 rounded-md text-white hover:bg-white/20 hover:border-white/50 transition-colors"
+                href="/timeline"
+                className="text-[#F8F7F3]/80 hover:text-amber-300 transition-colors"
               >
-                Register
+                Timeline
+              </Link>
+              <Link
+                href="/collection"
+                className="text-[#F8F7F3]/80 hover:text-amber-300 transition-colors"
+              >
+                Collection
+              </Link>
+              <Link
+                href="/profile"
+                className="text-[#F8F7F3]/80 hover:text-amber-300 transition-colors"
+              >
+                Profile
+              </Link>
+              <Link
+                href="/logout"
+                method="post"
+                as="button"
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-semibold hover:from-amber-300 hover:to-orange-400 transition-all"
+              >
+                Logout
               </Link>
             </>
           ) : (
             <>
-              <span className="text-white/80">
-                {auth.user.name}
-              </span>
-
               <Link
-                href="/dashboard"
-                className="px-4 py-2 bg-white/10 rounded-md text-white hover:bg-white/20"
+                href="/"
+                className="text-[#F8F7F3]/80 hover:text-amber-300 transition-colors"
               >
-                Dashboard
+                Home
               </Link>
-
               <Link
-                href="/collection"
-                className="px-4 py-2 bg-white/10 rounded-md text-white hover:bg-white/20"
+                href="/login"
+                className="text-[#F8F7F3]/80 hover:text-amber-300 transition-colors"
               >
-                Collection
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-semibold hover:from-amber-300 hover:to-orange-400 transition-all"
+              >
+                Register
               </Link>
             </>
           )}
         </div>
-      </div>
+      </nav>
+      <div className="h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent" />
     </header>
   );
 }

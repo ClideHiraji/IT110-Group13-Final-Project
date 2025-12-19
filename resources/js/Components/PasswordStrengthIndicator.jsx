@@ -1,6 +1,69 @@
 import React from 'react';
 
+/**
+ * PasswordStrengthIndicator Component
+ * 
+ * Visual password strength meter with requirements checklist.
+ * Validates password against security requirements and displays strength level.
+ * 
+ * Features:
+ * - Real-time password strength calculation
+ * - Visual progress bar
+ * - Requirements checklist with checkmarks
+ * - Color-coded strength levels (Weak/Fair/Good/Strong)
+ * - Optional requirements display toggle
+ * 
+ * Password Requirements:
+ * - Minimum 8 characters
+ * - At least one lowercase letter
+ * - At least one uppercase letter
+ * - At least one number
+ * - At least one special character (@$!%*#?&)
+ * 
+ * Strength Levels:
+ * - Weak (25%): 2 or fewer requirements met - Red
+ * - Fair (50%): 3 requirements met - Orange
+ * - Good (75%): 4 requirements met - Yellow
+ * - Strong (100%): All 5 requirements met - Green
+ * 
+ * @param {Object} props - Component props
+ * @param {string} props.password - Password string to validate
+ * @param {boolean} [props.showRequirements=true] - Show requirements list
+ * 
+ * @example
+ * // Basic usage in registration form
+ * const [password, setPassword] = useState('');
+ * 
+ * <TextInput 
+ *   type="password" 
+ *   value={password} 
+ *   onChange={(e) => setPassword(e.target.value)}
+ * />
+ * <PasswordStrengthIndicator password={password} />
+ * 
+ * @example
+ * // Without requirements list
+ * <PasswordStrengthIndicator 
+ *   password={password} 
+ *   showRequirements={false}
+ * />
+ * 
+ * @example
+ * // In a password change form
+ * <div className="space-y-4">
+ *   <div>
+ *     <InputLabel value="New Password" />
+ *     <TextInput 
+ *       type="password"
+ *       value={newPassword}
+ *       onChange={(e) => setNewPassword(e.target.value)}
+ *     />
+ *     <PasswordStrengthIndicator password={newPassword} />
+ *   </div>
+ * </div>
+ */
 export default function PasswordStrengthIndicator({ password, showRequirements = true }) {
+    // Define password requirements
     const requirements = {
         minLength: password.length >= 8,
         hasLowerCase: /[a-z]/.test(password),
@@ -9,13 +72,14 @@ export default function PasswordStrengthIndicator({ password, showRequirements =
         hasSpecial: /[@$!%*#?&]/.test(password),
     };
 
+    // Count met requirements
     const metRequirements = Object.values(requirements).filter(Boolean).length;
-    
-    // Calculate strength
+
+    // Calculate strength level
     let strength = 0;
     let strengthText = '';
     let strengthColor = '';
-    
+
     if (password.length === 0) {
         strengthText = '';
         strengthColor = '';
@@ -40,63 +104,47 @@ export default function PasswordStrengthIndicator({ password, showRequirements =
     const allRequirementsMet = metRequirements === 5;
 
     return (
-        <div className="space-y-3">
+        <div className="mt-2 space-y-2">
             {/* Strength Bar */}
             {password.length > 0 && (
-                <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                        <span className="text-xs font-ui text-[#F8F7F3]/50">Password Strength</span>
-                        <span className={`text-xs font-ui font-semibold ${
-                            strengthText === 'Weak' ? 'text-red-400' :
-                            strengthText === 'Fair' ? 'text-orange-400' :
-                            strengthText === 'Good' ? 'text-yellow-400' :
-                            'text-green-400'
-                        }`}>
-                            {strengthText}
-                        </span>
-                    </div>
-                    <div className="h-2 bg-amber-950/20 rounded-full overflow-hidden">
-                        <div 
-                            className={`h-full ${strengthColor} transition-all duration-300 rounded-full`}
+                <div>
+                    <div className="h-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div
+                            className={`h-full transition-all duration-300 ${strengthColor}`}
                             style={{ width: `${strength}%` }}
                         />
                     </div>
+                    <p className={`text-xs mt-1 ${strengthText === 'Weak' ? 'text-red-600' : strengthText === 'Fair' ? 'text-orange-600' : strengthText === 'Good' ? 'text-yellow-600' : 'text-green-600'}`}>
+                        {strengthText}
+                    </p>
                 </div>
             )}
 
-            {/* Requirements List */}
+            {/* Requirements Checklist */}
             {showRequirements && password.length > 0 && (
-                <div className="p-3 bg-amber-950/20 border border-amber-500/20 rounded-lg space-y-2">
-                    <p className="text-xs font-ui text-[#F8F7F3]/70 mb-2">Password must contain:</p>
-                    
-                    <RequirementItem met={requirements.minLength} text="At least 8 characters" />
-                    <RequirementItem met={requirements.hasUpperCase} text="One uppercase letter (A-Z)" />
-                    <RequirementItem met={requirements.hasLowerCase} text="One lowercase letter (a-z)" />
-                    <RequirementItem met={requirements.hasNumber} text="One number (0-9)" />
-                    <RequirementItem met={requirements.hasSpecial} text="One special character (@$!%*#?&)" />
+                <div className="text-xs space-y-1">
+                    <p className="font-medium text-gray-700 dark:text-gray-300">
+                        Password must contain:
+                    </p>
+                    <ul className="space-y-1">
+                        <li className={requirements.minLength ? 'text-green-600' : 'text-gray-500'}>
+                            {requirements.minLength ? '✓' : '○'} At least 8 characters
+                        </li>
+                        <li className={requirements.hasLowerCase ? 'text-green-600' : 'text-gray-500'}>
+                            {requirements.hasLowerCase ? '✓' : '○'} One lowercase letter
+                        </li>
+                        <li className={requirements.hasUpperCase ? 'text-green-600' : 'text-gray-500'}>
+                            {requirements.hasUpperCase ? '✓' : '○'} One uppercase letter
+                        </li>
+                        <li className={requirements.hasNumber ? 'text-green-600' : 'text-gray-500'}>
+                            {requirements.hasNumber ? '✓' : '○'} One number
+                        </li>
+                        <li className={requirements.hasSpecial ? 'text-green-600' : 'text-gray-500'}>
+                            {requirements.hasSpecial ? '✓' : '○'} One special character (@$!%*#?&)
+                        </li>
+                    </ul>
                 </div>
             )}
-        </div>
-    );
-}
-
-function RequirementItem({ met, text }) {
-    return (
-        <div className="flex items-center space-x-2">
-            <div className={`w-4 h-4 rounded-full flex items-center justify-center transition-colors duration-200 ${
-                met ? 'bg-green-500' : 'bg-amber-500/20'
-            }`}>
-                {met && (
-                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
-                )}
-            </div>
-            <span className={`text-xs font-ui transition-colors duration-200 ${
-                met ? 'text-green-400' : 'text-[#F8F7F3]/50'
-            }`}>
-                {text}
-            </span>
         </div>
     );
 }

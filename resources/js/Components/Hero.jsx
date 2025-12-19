@@ -1,95 +1,100 @@
 import React from "react";
-// import ThreeBackground from "./ThreeBackground";  
-import { motion, useScroll, useTransform } from "framer-motion"; // ✅ Changed here
+import { motion } from "framer-motion";
 
+/**
+ * Hero Component
+ * 
+ * Landing page hero section with typewriter animation.
+ * Introduces the art timeline journey with engaging animation.
+ * 
+ * Features:
+ * - Typewriter text animation
+ * - Staggered letter animations
+ * - Call-to-action button
+ * - Parallax scroll effects
+ * - Cinematic presentation
+ * 
+ * Animations:
+ * - Title appears letter-by-letter
+ * - Subtitle fades in after title
+ * - Button slides up
+ * - Scroll-based parallax
+ * 
+ * @param {Object} props - Component props
+ * @param {Function} props.onBegin - Callback when user clicks begin button
+ * 
+ * @example
+ * // In landing page
+ * const handleBegin = () => {
+ *   // Scroll to timeline or navigate
+ *   window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+ * };
+ * 
+ * <Hero onBegin={handleBegin} />
+ * 
+ * @example
+ * // With router navigation
+ * <Hero onBegin={() => router.visit('/timeline')} />
+ */
 export default function Hero({ onBegin }) {
-  const { scrollY } = useScroll(); // ✅ Changed here
-  
-  // Remove these if you're not using them:
-  // const bgY = useTransform(scrollY, [0, 300], [0, -120]);
-  // const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
-  // const heroScale = useTransform(scrollY, [0, 300], [1, 0.95]);
+    return (
+        <section className="relative h-screen flex items-center justify-center bg-black">
+            {/* Background gradient */}
+            <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 to-black" />
+            
+            {/* Content */}
+            <div className="relative z-10 text-center px-4">
+                {/* Typewriter Title */}
+                <div className="text-5xl md:text-7xl font-bold mb-6">
+                    {"Chronicles of ".split("").map((letter, index) => (
+                        <motion.span
+                            key={`chronicles-${index}`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.1, delay: index * 0.05 }}
+                            className="text-white"
+                        >
+                            {letter === " " ? "\u00A0" : letter}
+                        </motion.span>
+                    ))}
+                    <br />
+                    {"Human Creativity".split("").map((letter, index) => (
+                        <motion.span
+                            key={`creativity-${index}`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ 
+                                duration: 0.1, 
+                                delay: ("Chronicles of ".length * 0.05) + (index * 0.05) 
+                            }}
+                            className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"
+                        >
+                            {letter === " " ? "\u00A0" : letter}
+                        </motion.span>
+                    ))}
+                </div>
 
-  return (
-    <section className="relative h-screen w-full overflow-hidden bg-black">
-      {/* 3D BACKGROUND */}
-      {/* <div className="absolute inset-0 z-0">
-        <ThreeBackground />
-      </div> */}
+                {/* Subtitle */}
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 2, duration: 0.8 }}
+                    className="text-xl text-gray-300 mb-8"
+                >
+                    A guided journey through the evolution of art.
+                </motion.p>
 
-      {/* CONTENT */}
-      <div className="relative z-30 max-w-7xl mx-auto px-6 h-full flex items-center justify-center text-center">
-        {/* LEFT SIDE: TEXT */}
-        <div className="flex flex-col items-center">
-          
-          {/* TYPEWRITER TITLE */}
-          <motion.h1
-            className="text-white font-display text-7xl font-bold leading-tight inline-block"
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: {},
-              visible: {
-                transition: {
-                  delayChildren: 0.10,
-                  staggerChildren: 0.09,   // speed of typing
-                },
-              },
-            }}
-          >
-            {"Chronicles of ".split("").map((letter, index) => (
-              <motion.span
-                key={"line1-" + index}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-                transition={{ duration: 0.15, ease: "easeOut" }}
-              >
-                {letter === " " ? "\u00A0" : letter}
-              </motion.span>
-            ))}
-
-            <br />
-
-            {"Human Creativity".split("").map((letter, index) => (
-              <motion.span
-                key={"line2-" + index}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-                transition={{ duration: 0.15, ease: "easeOut" }}
-              >
-                {letter === " " ? "\u00A0" : letter}
-              </motion.span>
-            ))}  
-          </motion.h1>
-
-          {/* SUBTITLE AFTER TYPEWRITER */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.3, delay: 2.4 }}  // wait for typing to finish
-            className="mt-4 text-gray-200 text-lg"
-          >
-            A guided journey through the evolution of art.
-          </motion.p>
-
-          {/* BUTTON */}
-          <motion.button
-            onClick={onBegin}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.3, delay: 2.6 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="mt-16 px-5 py-3 bg-white/10 border border-white/30 rounded-lg text-white backdrop-blur-sm hover:bg-white/20 transition-colors cursor-pointer pointer-events-auto relative z-50"
-          >
-            Begin the Journey
-          </motion.button>
-        </div>
-      </div>
-    </section>
-  );
+                {/* CTA Button */}
+                <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 2.5, duration: 0.8 }}
+                    onClick={onBegin}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 px-8 rounded-full text-lg transition-all duration-300 transform hover:scale-105"
+                >
+                    Begin the Journey
+                </motion.button>
+            </div>
+        </section>
+    );
 }

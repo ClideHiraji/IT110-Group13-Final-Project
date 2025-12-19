@@ -4,7 +4,16 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Carousel3D from './Carousel3D';
 
-export default function PeriodChapter({ period, artworks, onArtworkClick, isActive, index }) {
+export default function PeriodChapter({ 
+  period, 
+  artworks, 
+  onArtworkClick, 
+  isActive, 
+  index,
+  savedArtworks = [],
+  onSaveArtwork,
+  onRemoveArtwork
+}) {
   const sectionRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -18,20 +27,20 @@ export default function PeriodChapter({ period, artworks, onArtworkClick, isActi
   return (
     <section 
       ref={sectionRef}
+      id={index === 0 ? 'timeline-start' : undefined}
       data-period-id={period.id}
       className="relative min-h-[300vh] z-10"
     >
       {/* ALWAYS-ON BLUR LAYER */}
       <div className="absolute inset-0 -z-20 bg-black/30 backdrop-blur-md backdrop-saturate-500" /> 
 
-      {/* CHAPTER BACKGROUND IMAGE (fade only image, not blur)
+      {/* CHAPTER BACKGROUND IMAGE (fade only image, not blur) */}
       <motion.div
         className="absolute inset-0 -z-10"
         style={{
           backgroundImage: `url(${period.background})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          // backdropFilter: isActive ? 'blur(12px)' : 'blur(8px)'
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: isActive ? 1 : 0.2 }}
@@ -126,18 +135,19 @@ export default function PeriodChapter({ period, artworks, onArtworkClick, isActi
           </motion.div>
         </motion.div>
 
-        {/* 3D Carousel Phase - CRITICAL: Ensure pointer events work */}
+        {/* 3D Carousel Phase - PASSES NEW PROPS TO CAROUSEL */}
         <motion.div
-          style={{ opacity: carouselOpacity }}
+          style={{ opacity: carouselOpacity, pointerEvents: isActive ? 'auto' : 'none' }}
           className="absolute inset-0"
-          // IMPORTANT: Allow pointer events to pass through to carousel
-          pointerEvents={isActive ? 'auto' : 'none'}
         >
           <Carousel3D 
             artworks={artworks}
             period={period}
             onArtworkClick={onArtworkClick}
             isActive={isActive}
+            savedArtworks={savedArtworks}         // ✅ NEW - passed to Carousel3D
+            onSaveArtwork={onSaveArtwork}         // ✅ NEW - passed to Carousel3D
+            onRemoveArtwork={onRemoveArtwork}     // ✅ NEW - passed to Carousel3D
           />
         </motion.div>
       </div>
